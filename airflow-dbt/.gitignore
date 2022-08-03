@@ -1,0 +1,7 @@
+/bin
+/imba_airflow
+/__pycache__
+/py_env
+*.pid
+.env
+.pyc
