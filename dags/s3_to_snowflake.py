@@ -1,5 +1,3 @@
-import csv
-import logging
 from datetime import datetime, timedelta, date
 
 from airflow import DAG
@@ -11,26 +9,15 @@ from airflow.providers.dbt.cloud.operators.dbt import DbtCloudRunJobOperator
 from airflow.models import Variable
 
 
-S3_CONN_ID = 'snowflake'
+SNOWFLAKE_CONN_ID = 'snowflake'
 S3_BUCKET = Variable.get('s3_bucket_data')
+S3_BUCKET_NAME = Variable.get('s3_bucket_name')
 AWS_KEY_ID = Variable.get('AWS_KEY_ID')
 AWS_SECRET_KEY = Variable.get('AWS_SECRET_KEY')
 DBT_CLOUD_CONN_ID = "dbt_cloud"
 DBT_JOB_ID = Variable.get('DBT_JOB_ID')
 
-# def upload_to_s3(endpoint, date):
-#     # Instanstiate
-#     s3_hook = S3Hook(aws_conn_id=S3_CONN_ID)
-
-#     # Base URL
-#     url = 'https://covidtracking.com/api/v1/states/'
-    
-#     # Grab data
-#     res = requests.get(url+'{0}/{1}.csv'.format(endpoint, date))
-
-#     # Take string, upload to S3 using predefined method
-#     s3_hook.load_string(res.text, '{0}_{1}.csv'.format(endpoint, date), bucket_name=BUCKET, replace=True)
-
+today = date.today()
 
 default_args = {
     'owner': 'airflow',
@@ -57,19 +44,19 @@ with DAG('data_s3_to_snowflake',
 
     create_source_tables = SnowflakeOperator(
         task_id='create_source_tables',
-        snowflake_conn_id=S3_CONN_ID,
+        snowflake_conn_id=SNOWFLAKE_CONN_ID,
         sql='create_snowflake_table.sql',
     ) 
 
     create_file_format = SnowflakeOperator(
         task_id='create_file_format',
-        snowflake_conn_id=S3_CONN_ID,
+        snowflake_conn_id=SNOWFLAKE_CONN_ID,
         sql='create_file_format.sql',
     )
 
     create_stage = SnowflakeOperator(
         task_id='create_stage',
-        snowflake_conn_id=S3_CONN_ID,
+        snowflake_conn_id=SNOWFLAKE_CONN_ID,
         sql='create_snowflake_stage.sql',
         params={
             "s3_bucket": S3_BUCKET,
@@ -77,20 +64,6 @@ with DAG('data_s3_to_snowflake',
             "password": AWS_SECRET_KEY,
         },
     )
-
-    # pivot_data = SnowflakeOperator(
-    #     task_id='call_pivot_sproc',
-    #     snowflake_conn_id='snowflake',
-    #     sql='call pivot_state_data();',
-    #     role='KENTEND',
-    #     schema='SANDBOX_KENTEND'
-    # ) 
-
-    # load_to_snowflake = SnowflakeOperator(
-    #     task_id='insert_into_table',
-    #     snowflake_conn_id='snowflake',
-    #     sql='load_to_snowflake.sql'
-    # )
 
     task_list_1 = []
     for endpoint in endpoints_1:
@@ -102,7 +75,7 @@ with DAG('data_s3_to_snowflake',
             schema='rawdata',
             file_format='csv_format',
             role='SYSADMIN',
-            snowflake_conn_id=S3_CONN_ID,
+            snowflake_conn_id=SNOWFLAKE_CONN_ID,
             )
         task_list_1.append(load_to_snowflake_1)    
 
@@ -116,7 +89,7 @@ with DAG('data_s3_to_snowflake',
             schema='rawdata',
             file_format='csv_format',
             role='SYSADMIN',
-            snowflake_conn_id=S3_CONN_ID,
+            snowflake_conn_id=SNOWFLAKE_CONN_ID,
             )
         task_list_2.append(load_to_snowflake_2) 
 
@@ -128,33 +101,19 @@ with DAG('data_s3_to_snowflake',
         timeout=300,
     )
 
-    # for endpoint in endpoints:
-    #     # generate_files = PythonOperator(
-    #     #     task_id='generate_file_{0}'.format(endpoint),
-    #     #     python_callable=upload_to_s3,
-    #     #     op_kwargs={'endpoint': endpoint, 'date': date}
-    #     # )
-    
-    #     load_to_snowflake = S3ToSnowflakeOperator(
-    #         task_id='upload_{0}_snowflake'.format(endpoint[1]),
-    #         s3_keys=['/{0}/{1}.csv'.format(endpoint[0], endpoint[1])],
-    #         stage='csv_stage',
-    #         table='{0}'.format(endpoint[1]),
-    #         schema='rawdata',
-    #         file_format='csv_format',
-    #         role='SYSADMIN',
-    #         snowflake_conn_id='snowflake',
-    #     )
-
-
-    # chain(
-    #     begin,
-    #     create_source_tables,
-    #     create_file_format,
-    #     create_stage,
-    #     load_to_snowflake,
-    #     end,
-    # )
+    unload_to_s3 = SnowflakeOperator(
+        task_id='unload_to_s3',
+        snowflake_conn_id=SNOWFLAKE_CONN_ID,
+        sql='unload_to_s3.sql',
+        params={
+            "s3_bucket": S3_BUCKET_NAME,
+            "login": AWS_KEY_ID,
+            "password": AWS_SECRET_KEY,
+            "today_year": today.year,
+            "today_month": today.month,
+            "today_day": today.day,
+        },
+    )
 
     chain(
         begin,
@@ -164,5 +123,6 @@ with DAG('data_s3_to_snowflake',
         *task_list_1,
         *task_list_2,
         trigger_dbt_cloud_job_run,
+        unload_to_s3,
         end,
     )
