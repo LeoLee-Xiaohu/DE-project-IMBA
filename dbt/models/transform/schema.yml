@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: rawdata
+    schema: rawdata
+    tables:
+      - name: order_products_prior
+      - name: order_products_train
+      - name: orders
+      - name: products
+
+models:
+  - name: order_products
+    columns:
+      - name: order_id
+        description: "The primary key for order products"
+        tests:
+          - not_null

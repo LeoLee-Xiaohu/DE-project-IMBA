@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: final_data
+    description: The is the final data that ready for Data Analyst/Data Scientist/ML Engineer to work. (V1)

@@ -1,32 +1,46 @@
-# Instacart Market Basket Analysis （IMBA)
-![Figure instacart logo](https://github.com/LeoLee-Xiaohu/imba/blob/main/IMG/instacart-logo.jpeg) 
-## Project IMBA Introduction
+Overview
+========
 
-### 1.Background
+Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
 
-- Instacart is a grocery order and delivery app, which is similar to Coles or Woolworth order and delivery app in Australia. Over 33 million grocery orders from more than 200, 000 customers were provided by Instacart as open-sourced data. However, the salesman of Instacart recommends products in traditional ways or, that is to say, manually. They have not made good use of the huge amount of valuable transactional records yet. By taking advantage to analyze an ample amount of data, Instacart would predict well customer purchasing behaviour and pattern, which would strongly enhance their competitiveness.  
+Project Contents
+================
 
-### 2. Objectives
+Your Astro project contains the following files and folders:
 
-- Build automated big data pipeline to process data (Lambda Architecture)
-- Build a machine learning model to predict customer behaviors and improve sales of reorder.  
+- dags: This folder contains the Python files for your Airflow DAGs. By default, this directory includes an example DAG that runs every 30 minutes and simply prints the current date. It also includes an empty 'my_custom_function' that you can fill out to execute Python code.
+- Dockerfile: This file contains a versioned Astro Runtime Docker image that provides a differentiated Airflow experience. If you want to execute other commands or overrides at runtime, specify them here.
+- include: This folder contains any additional files that you want to include as part of your project. It is empty by default.
+- packages.txt: Install OS-level packages needed for your project by adding them to this file. It is empty by default.
+- requirements.txt: Install Python packages needed for your project by adding them to this file. It is empty by default.
+- plugins: Add custom or community plugins for your project to this file. It is empty by default.
+- airflow_settings.yaml: Use this local-only file to specify Airflow Connections, Variables, and Pools instead of entering them in the Airflow UI as you develop DAGs in this project.
 
-### 3. Project plan( methods)
+Deploy Your Project Locally
+===========================
 
-- This project will use AWS to build a data lake, use AWS/open-source service to process data, then integrate and build data ETL process, and use machine learning model to build a data product app, finally iterate data products and improve the process.  
+1. Start Airflow on your local machine by running 'astro dev start'.
 
-- Core techniques would be used in this project:  
-  
-  - AWS data lake construction  
-  
-  - Data process coordination and integration  
-  
-  - Data modeling  
-  
-  - Big data engine application  
-  
-  - Data product development  
-  
-  - Machine learning model building  
-  
-  - Online/Offline Recommandation
+This command will spin up 3 Docker containers on your machine, each for a different Airflow component:
+
+- Postgres: Airflow's Metadata Database
+- Webserver: The Airflow component responsible for rendering the Airflow UI
+- Scheduler: The Airflow component responsible for monitoring and triggering tasks
+
+2. Verify that all 3 Docker containers were created by running 'docker ps'.
+
+Note: Running 'astro dev start' will start your project with the Airflow Webserver exposed at port 8080 and Postgres exposed at port 5432. If you already have either of those ports allocated, you can either stop your existing Docker containers or change the port.
+
+3. Access the Airflow UI for your local Airflow project. To do so, go to http://localhost:8080/ and log in with 'admin' for both your Username and Password.
+
+You should also be able to access your Postgres Database at 'localhost:5432/postgres'.
+
+Deploy Your Project to Astronomer
+=================================
+
+If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://docs.astronomer.io/cloud/deploy-code/
+
+Contact
+=======
+
+The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support team: https://support.astronomer.io/
