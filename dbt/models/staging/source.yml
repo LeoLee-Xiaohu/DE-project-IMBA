@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: imba
+    database: imba
+    schema: dev
+    tables:
+      - name: src_orders
+      - name: src_ordproducts
+      - name: src_products

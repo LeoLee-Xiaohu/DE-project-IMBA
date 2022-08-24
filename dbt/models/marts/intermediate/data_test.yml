@@ -1,0 +1,46 @@
+version: 2
+ 
+models:
+  - name: prd_features
+    description: "An intermediate model that filters product features"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('stg_order_products_prior') 
+              field: product_id
+
+  - name: up_features
+    description: "An intermediate model that contains up average cart posistion, ect"
+    columns:
+      - name: user_id  || ' ' || product_id
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('stg_order_products_prior') 
+              field: user_id  || ' ' || product_id
+              
+  - name: user_feature_1
+    description: "An intermediate model that describe user mean_days_since_prior, user buy period, ect "
+    columns:
+      - name: user_id 
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: source('imba','src_orders') 
+              field: user_id
+
+  - name: user_feature_2
+    description: "An intermediate model that describe user reorder ratio, ordered product and total ordered products "
+    columns:
+      - name: user_id 
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('stg_order_products_prior') 
+              field: user_id
