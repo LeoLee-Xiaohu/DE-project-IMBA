@@ -9,8 +9,7 @@ import os
 # from airflow.utils.helpers import chain
 from airflow.utils.task_group import TaskGroup
 
-# today = str(dt.date.today())
-today = '2022-05-22'
+today = str(dt.date.today())
 # today_var = { today }
 # prepare sql for psql
 
@@ -61,7 +60,6 @@ with DAG('imba_pipeline_chain', default_args=default_args, schedule_interval='@o
                 sql=sql_scp,
                 dag=dag_1))
 
-        # task_1_list[0] >> task_1_list[1] >> task_1_list[2] >> task_1_list[3]
         task_1_list
 
     with TaskGroup(group_id='s3_to_ods') as task_2:
@@ -82,7 +80,7 @@ with DAG('imba_pipeline_chain', default_args=default_args, schedule_interval='@o
 
     task_3 = BashOperator(
         task_id='ods_to_dwh',
-        bash_command='cd /opt/dbt && dbt run --models to_dwh --profiles-dir . --vars "{ "current_date": "2022-05-22" }" ',
+        bash_command='cd /opt/dbt && dbt run --models to_dwh --profiles-dir . --vars "{ "current_date": { today } }" ',
         env={
             'snowflake_user': '{{ var.value.snowflake_user }}',
             'snowflake_password': '{{ var.value.snowflake_password }}',
@@ -91,5 +89,4 @@ with DAG('imba_pipeline_chain', default_args=default_args, schedule_interval='@o
         dag=dag_1
     )
 
-    # task_3
     task_1 >> task_2 >> task_3
