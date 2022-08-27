@@ -1,0 +1,24 @@
+name: my_project
+config-version: 2
+version: 1.0.0
+
+profile: default
+
+vars:
+  current_date: ''
+
+models:
+  my_project:
+    to_dwh:
+      database: imba
+      schema: dwh
+      materialized: incremental
+    to_app:
+      database: imba
+      schema: app
+      materialized: incremental
+    in_app:
+      database: imba
+      schema: app
+      materialized: table
+      # create new tables in app schema

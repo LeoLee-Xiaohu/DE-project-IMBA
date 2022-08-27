@@ -1,0 +1,13 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: fr83786.ap-southeast-2
+      user: "{{ env_var('snowflake_user') }}"
+      password: "{{ env_var('snowflake_password') }}"
+      role: dbt_dev_role
+      database: imba
+      warehouse: dbt_dev_wh
+      schema: app
+      threads: 100

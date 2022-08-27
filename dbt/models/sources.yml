@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: dwh_schema
+    database: imba
+    schema: dwh
+    tables:
+      - name: users_dwh
+      - name: order_products_dwh
+      - name: products_dwh
+      - name: product_prices_dwh
+
+  - name: ods_schema
+    database: imba
+    schema: ods
+    tables:
+      - name: order_products
+      - name: orders
+      - name: products
+      - name: users
+
+  - name: app_schema
+    database: imba
+    schema: app
+    tables:
+      - name: order_products_app
+      - name: orders_app
