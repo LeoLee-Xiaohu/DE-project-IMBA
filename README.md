@@ -8,7 +8,7 @@
 
 ### 2. Objectives
 
-- Build automated big data pipeline to process data (Lambda Architecture)
+- Build automated big data pipeline to process data 
 - Build a machine learning model to predict customer behaviors and improve sales of reorder.  
 
 ### 3. Project plan( methods)
