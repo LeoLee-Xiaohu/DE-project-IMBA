@@ -1,0 +1,10 @@
+apache-airflow-providers-dbt-cloud==2.1.0
+
+apache-airflow-providers-snowflake
+apache-airflow-providers-common-sql
+astronomer-providers[snowflake]
+
+# apache-airflow-providers-snowflake
+# snowflake-connector-python
+# snowflake-sqlalchemy
+# boto3

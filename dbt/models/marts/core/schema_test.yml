@@ -1,0 +1,17 @@
+version: 2
+ 
+models:
+  - name: non_daily_orders_results
+    columns:
+      - name: department_id
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 25
+
+    columns:
+      - name: aisle_id
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 135
