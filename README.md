@@ -1,5 +1,5 @@
 # Instacart Market Basket Analysis （IMBA)
-![Figure instacart logo](https://github.com/LeoLee-Xiaohu/imba/blob/main/IMG/instacart-logo.jpeg) 
+![Figure instacart logo](https://github.com/LeoLee-Xiaohu/imba/blob/feature-Lxh/IMG/inst_logo.png) 
 ## Project IMBA Introduction
 
 ### 1.Background
@@ -33,7 +33,7 @@
 
 ### 4. Solution design 
 #### 4.1 solution 1.0 (AWS ecosystem)
-![Figure instacart logo](https://github.com/LeoLee-Xiaohu/imba/blob/main/IMG/instacart-logo.jpeg) 
+![Figure instacart logo](https://github.com/LeoLee-Xiaohu/imba/blob/feature-Lxh/IMG/solution_design_aws4.0.drawio%20copy.png) 
 
 #### 4.2 solution 2.0 (Snowflake + Airflow + dbt)
-![Figure instacart logo](https://github.com/LeoLee-Xiaohu/imba/blob/main/IMG/instacart-logo.jpeg) 
+![Figure instacart logo](https://github.com/LeoLee-Xiaohu/imba/blob/feature-Lxh/IMG/IMBA-DBT.png) 
